@@ -53,11 +53,11 @@ export const main = async (req: Request, res: Response) => {
         });
         if( find_item ) {
             const d = find_item.querySelector(".td");
-            return d ? d.textContent ?? "" : "";
+            return d ? d.textContent?.replace("DVD", "").trim() ?? "" : "";
         }
         return "";
     };
-    const video_datas = [...document.querySelectorAll(".p-workPage__table .item")];
+    const video_datas = [...page.querySelectorAll(".p-workPage__table .item")];
     result_data.result = {
         link: result_data.result.link ?? "",
         title: get_dom_text(page, ".p-workPage__title"),
