@@ -1,6 +1,6 @@
 import { get_webpage } from "../api.js";
 import type { Request, Response } from "express";
-import type { VideoDetailInterface } from "../interfaces.js";
+import type { VideoDetailInterface } from "./interfaces.js";
 
 export const main = async (req: Request, res: Response) => {
     const page = await get_webpage(`https://attackers.net/works/detail/${req.params.id}`);

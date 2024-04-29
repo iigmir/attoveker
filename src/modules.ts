@@ -26,6 +26,27 @@ export class DomList {
     }
 }
 
+export function getActorData(a: Element): ActorInterface {
+    const dom: HTMLAnchorElement | null = a.querySelector('a[href*="actress/detail"]');
+    const get_text = (regex = /whatever/g, input = "") => {
+        // Use the regex to extract the ID from the text
+        const match = input.match(regex);
+        // Check if a match is found
+        if (match) {
+            // Return the captured the ID
+            return match[0] ? match[0] : "";
+        } else {
+            // Return null if no match is found
+            return "";
+        }
+    };
+    return {
+        name: dom?.textContent ?? "",
+        link: dom?.href ?? "",
+        id: get_text(/\/actress\/detail\/([0-9]+)(\?|)/g, dom?.href ?? "").replace(/\/actress\/detail\//g, ""),
+    };
+}
+
 /**
  * For any DOMs under `<div class="item"> <div class="c-card">`
  */
@@ -53,14 +74,7 @@ export class ImageCards extends DomList {
         return get_text(regex, input);
     }
     get_actor(its: Element): ActorInterface {
-        const dom: HTMLAnchorElement | null = its.querySelector("a.name");
-        return {
-            name: dom?.textContent ?? "",
-            link: dom?.href ?? "",
-            id: this
-                .get_id(/\/actress\/detail\/([0-9]+)(\?|)/g, dom?.href ?? "")
-                .replace(/\/actress\/detail\//g, ""),
-        };
+        return getActorData(its);
     }
     api() {
         return this.list.map( (its) => {
@@ -107,4 +121,3 @@ export class SinglePageTags extends DomList {
         });
     }
 }
-
