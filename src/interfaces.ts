@@ -1,16 +1,10 @@
-export interface VideoDetailInterface {
-    link: string
-    title?: string
-    description?: string
-}
-
 export interface ActorInterface {
     name: string
     link: string
     id: string
 }
 
-export interface RequestResponse {
+export interface RequestResponse<T> {
     message: string
     /**
      * @see <https://stackoverflow.com/a/74312037>
@@ -18,5 +12,21 @@ export interface RequestResponse {
     params: {
         [key: string]: string;
     }
-    result: VideoDetailInterface
+    result: T;
 }
+
+export interface VideoDetailResultInterface {
+    link: string
+    id: string
+    title: string
+    description: string
+    time: string
+    price: string
+    preview: string
+    series: string
+    release: string
+    actors: ActorInterface[]
+    // genre: ActorInterface[]
+}
+
+export interface VideoDetailInterface extends RequestResponse<VideoDetailResultInterface> {}
