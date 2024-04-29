@@ -1,4 +1,5 @@
-import type { ActorInterface, RequestResponse } from "../interfaces.js";
+import type { ActorInterface, BasicLinkInterface } from "../modules/actor.js";
+import { RequestResponse } from "../interfaces.js";
 
 export interface VideoDetailResultInterface {
     link: string
@@ -11,7 +12,7 @@ export interface VideoDetailResultInterface {
     series: string
     release: string
     actors: ActorInterface[]
-    // genre: ActorInterface[]
+    genre: BasicLinkInterface[]
 }
 
 export interface VideoDetailInterface extends RequestResponse<VideoDetailResultInterface> {}

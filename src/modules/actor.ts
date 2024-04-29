@@ -1,21 +1,24 @@
-/**
- * For example, `<a href="https://attackers.net/actress/detail/351897">松下紗栄子</a>` will be:
- * ```json
- * { name: "松下紗栄子", id: "351897", link: "https://attackers.net/actress/detail/351897" }
- * ```
- */
-export interface ActorInterface {
+export interface BasicLinkInterface {
     name: string
     link: string
     id: string
 }
 
 /**
+ * For example, `<a href="https://attackers.net/actress/detail/351897">松下紗栄子</a>` will be:
+ * ```json
+ * { name: "松下紗栄子", id: "351897", link: "https://attackers.net/actress/detail/351897" }
+ * ```
+ */
+export interface ActorInterface extends BasicLinkInterface {}
+
+/**
  * getActorData('<a href="https://attackers.net/actress/detail/351897">松下紗栄子</a>')
  * // returns { name: "松下紗栄子", id: "351897", link: "https://attackers.net/actress/detail/351897" }
  */
 export function getActorData(a: Element): ActorInterface {
-    const dom: HTMLAnchorElement | null = a.querySelector('a[href*="actress/detail"]');
+    const selector = 'a[href*="actress/detail"]';
+    const dom: HTMLAnchorElement | null = a.querySelector(selector);
     const get_text = (regex = /whatever/g, input = "") => {
         // Use the regex to extract the ID from the text
         const match = input.match(regex);

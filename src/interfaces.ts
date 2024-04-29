@@ -1,9 +1,3 @@
-export interface ActorInterface {
-    name: string
-    link: string
-    id: string
-}
-
 export interface RequestResponse<T> {
     message: string
     /**
