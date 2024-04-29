@@ -1,9 +1,19 @@
+/**
+ * For example, `<a href="https://attackers.net/actress/detail/351897">松下紗栄子</a>` will be:
+ * ```json
+ * { name: "松下紗栄子", id: "351897", link: "https://attackers.net/actress/detail/351897" }
+ * ```
+ */
 export interface ActorInterface {
     name: string
     link: string
     id: string
 }
 
+/**
+ * getActorData('<a href="https://attackers.net/actress/detail/351897">松下紗栄子</a>')
+ * // returns { name: "松下紗栄子", id: "351897", link: "https://attackers.net/actress/detail/351897" }
+ */
 export function getActorData(a: Element): ActorInterface {
     const dom: HTMLAnchorElement | null = a.querySelector('a[href*="actress/detail"]');
     const get_text = (regex = /whatever/g, input = "") => {
@@ -25,6 +35,11 @@ export function getActorData(a: Element): ActorInterface {
     };
 }
 
+/**
+ * Get all actors!
+ * @param ary Many DOMs!
+ * @returns Many actors!
+ */
 export function getActorDatas(ary: Element[]): ActorInterface[] {
     return ary.map( getActorData );
 }
