@@ -16,6 +16,7 @@ const app = express();
 app.get("/", (req, res) => {
     res.json({ message: "Hello World!" });
 });
+
 app.get("/detail", (req, res) => {
     res.status(400);
     res.json({
@@ -38,11 +39,12 @@ app.get("/top", main_api);
  * Videos from <https://attackers.net/works/series>
  */
 app.get("/series", main_series);
+// app.get("/series/:id", main_genres);
 /**
  * Videos from <https://attackers.net/works/genre>
  */
 app.get("/genre", main_genres);
-// app.get("/label/:id", main_genres);
+// app.get("/genre/:id", main_genres);
 /**
  * Videos from <https://attackers.net/works/list/release>
  */
