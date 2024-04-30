@@ -1,3 +1,5 @@
+import { PaginationInterface } from "./interfaces.js";
+
 /**
  * GetLinkId("https://attackers.net/works/detail/ATVR053") // returns "ATVR053"
  * @see /tests/utils.spec.js, `GetLinkId` instance
@@ -13,14 +15,6 @@ export function GetLinkId(url = "") {
         return "";
     }
     return id;
-}
-
-interface PaginationInterface {
-    page: number,
-    total: number,
-    items: number,
-    start: number,
-    end: number,
 }
 
 export function GetPagination(text: string, page: number): PaginationInterface {
@@ -42,4 +36,8 @@ export function GetPagination(text: string, page: number): PaginationInterface {
     result.end = parseInt(end, 10);
     result.items = (result.end - result.start) + 1;
     return result;
+}
+
+export function GetPaginationByDom(elem: Element, page: number) {
+    return GetPagination( String(elem.textContent), page);
 }

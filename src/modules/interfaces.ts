@@ -1,3 +1,11 @@
+export interface PaginationInterface {
+    page: number,
+    total: number,
+    items: number,
+    start: number,
+    end: number,
+}
+
 export interface RequestResponse<T> {
     message: string
     /**
@@ -7,4 +15,5 @@ export interface RequestResponse<T> {
         [key: string]: string;
     }
     result: T;
+    pagination?: PaginationInterface
 }
