@@ -4,11 +4,68 @@ import { ActorInterface } from "../modules/links.js";
 import { GetLinkId } from "../modules/utils.js";
 import type { Request, Response } from "express";
 
+class ActressesDetail {
+    document: Document;
+    constructor(input: Document) {
+        this.document = input;
+    }
+    private get_actor(): ActorInterface {
+        // Images
+        const GetLinkIdByImg = (url: string) => {
+            // Split the URL by '/'
+            const parts = url.split('/');
+            // Get the second to last part of the URL
+            const idPart = parts[parts.length - 2];
+            // Extract the numeric ID using regex
+            const match = idPart.match(/\d+/);
+            // Check if a numeric ID is found
+            if (match) {
+                return match[0];
+            } else {
+                // Return null if no numeric ID is found
+                return "";
+            }
+        };
+        const img: HTMLImageElement | null = this.document.querySelector(".swiper-parent img.u-hidden--pc");
+        const avatar = img?.dataset.src ?? "";
+        const id = GetLinkIdByImg(avatar);
+
+        // Name elements
+        const name_elem = this.document.querySelector(".p-profile__title .top");
+        const en_name_elem = this.document.querySelector(".p-profile__title .bottom");
+
+        return {
+            id: id,
+            link: `https://attackers.net/actress/detail/${id}`,
+            name: name_elem?.textContent ?? "",
+            en_name: en_name_elem?.textContent ?? "",
+            avatar: avatar,
+        };
+    }
+    private get_profile() {
+        const table = this.document.querySelectorAll(".p-profile__info .table .item");
+        const result: string[][] = [];
+        table.forEach(item => {
+            result.push([
+                item.querySelector(".th")?.textContent?.trim() ?? "",
+                item.querySelector(".td")?.textContent?.trim() ?? ""
+            ]);
+        });
+        return result;
+    }
+    api() {
+        return {
+            actor: this.get_actor(),
+            profile: this.get_profile(),
+        };
+    }
+}
+
 export const detail = async (req: Request, res: Response) => {
     const page = await get_webpage("https://attackers.net/actress");
     res.json({
         message: "success",
-        result: (new MainActresses(page)).api(),
+        result: (new ActressesDetail(page)).api(),
     });
 };
 
