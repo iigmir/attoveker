@@ -1,7 +1,7 @@
 import { get_webpage } from "../api.js";
 import type { Request, Response } from "express";
 import type { VideoDetailInterface } from "./interfaces.js";
-import { ActorInterface, getActorDatas } from "../modules/actor.js";
+import { ActorInterface, getActorDatas, getGenreDatas } from "../modules/actor.js";
 
 export const main = async (req: Request, res: Response) => {
     const page = await get_webpage(`https://attackers.net/works/detail/${req.params.id}`);
@@ -71,6 +71,17 @@ export const main = async (req: Request, res: Response) => {
         }
         return [];
     };
+    const get_genres = (table: Element[], input: string): ActorInterface[] => {
+        const find_item = table.find( (elem) => {
+            const th = elem.querySelector(".th");
+            return th?.textContent?.includes( input );
+        });
+        if( find_item ) {
+            const dom = find_item.querySelector(".td");
+            return dom ? getGenreDatas([...dom.querySelectorAll("a")]) : [];
+        }
+        return [];
+    };
     const video_datas = [...page.querySelectorAll(".p-workPage__table .item")];
     result_data.result = {
         link: result_data.result.link ?? "",
@@ -84,7 +95,7 @@ export const main = async (req: Request, res: Response) => {
         release: get_table_item(video_datas, "発売日"),
         actors: get_actors(video_datas, "女優"),
         director: get_table_item(video_datas, "監督"),
-        genre: [],
+        genre: get_genres(video_datas, "ジャンル"),
     };
     res.json(result_data);
 };

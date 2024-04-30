@@ -51,6 +51,44 @@ export function getActorData(a: Element | HTMLAnchorElement): ActorInterface {
     };
 }
 
+export function getGenreData(a: Element | HTMLAnchorElement): BasicLinkInterface {
+    const get_dom = (a: Element | HTMLAnchorElement): HTMLAnchorElement | null => {
+        if( a.hasAttribute("href") ) {
+            return a as HTMLAnchorElement;
+        }
+        return a.querySelector(`a[href*="actress/detail"]`);
+    }
+    const get_text = (regex = /whatever/g, input = "") => {
+        // Use the regex to extract the ID from the text
+        const match = input.match(regex);
+        // Check if a match is found
+        if (match) {
+            // Return the captured the ID
+            return match[0] ? match[0] : "";
+        } else {
+            // Return null if no match is found
+            return "";
+        }
+    };
+    const dom = get_dom(a);
+    const id = get_text(/\/works\/list\/genre\/([0-9]+)(\?|)/g, dom?.href ?? "").replace(/\/works\/list\/genre\//g, "");
+    if( dom == null ) {
+        return {
+            name: "",
+            link: "",
+            id: id,
+        };
+    }
+    return {
+        name: dom.textContent ?? "",
+        link: dom.href,
+        id: id,
+    };
+}
+export function getGenreDatas(ary: Element[]): BasicLinkInterface[] {
+    return ary.map( getGenreData );
+}
+
 /**
  * Get all actors!
  * @param ary Many DOMs!
