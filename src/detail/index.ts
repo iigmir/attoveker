@@ -66,14 +66,15 @@ function get_interface_info(page: Document, link: string) {
         });
         if (find_item_in_table) {
             const dom = find_item_in_table.querySelector(".td");
-            function get_interfaces(dom: Element | null, callback: Function): BasicLinkInterface[] {
-                return dom ? callback([...dom.querySelectorAll("a")]) : [];
+            if( !dom ) {
+                console.log(selector, dom);
+                return [];
             }
             switch (selector) {
-                case SELECTORS.ACTORS: return get_interfaces(dom, getActorDatas);
-                case SELECTORS.GENRE : return get_interfaces(dom, getGenreDatas);
-                case SELECTORS.LABEL : return get_interfaces(dom, getLabelDatas);
-                case SELECTORS.SERIES: return get_interfaces(dom, getSeriesDatas);
+                case SELECTORS.ACTORS: return getActorDatas([...dom.querySelectorAll("a")]);
+                case SELECTORS.GENRE : return getGenreDatas([...dom.querySelectorAll("a")]);
+                case SELECTORS.LABEL : return getLabelDatas([...dom.querySelectorAll("a")]);
+                case SELECTORS.SERIES: return getSeriesDatas([...dom.querySelectorAll("a")]);
                 default: return [];
             }
         }
