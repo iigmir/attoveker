@@ -30,9 +30,9 @@ function get_interface_info(page: Document, link: string) {
         PRICE: "価格",
     };
     const get_dom_text = (input: Document, selector: string): string => {
-        const dom = input.querySelector(selector);
-        const result = dom?.textContent?.trim();
-        return result ? result : "";
+        const elem = input.querySelector(selector);
+        const result = elem?.textContent?.trim();
+        return result ?? "";
     };
     /**
      * Get video URL
@@ -40,8 +40,8 @@ function get_interface_info(page: Document, link: string) {
      * @returns Video URL
      */
     const get_video = (input: Document): string => {
-        const dom = input.querySelector("video");
-        return dom ? dom.src : "";
+        const elem = input.querySelector("video");
+        return elem ? elem.src : "";
     };
     /**
      * get_table_item(table, "監督") // 芳賀栄太郎
@@ -54,8 +54,8 @@ function get_interface_info(page: Document, link: string) {
             return th?.textContent?.includes(selector);
         });
         if (find_item_in_table) {
-            const d = find_item_in_table.querySelector(".td");
-            return d ? d.textContent?.trim() ?? "" : "";
+            const elem = find_item_in_table.querySelector(".td");
+            return elem ? elem.textContent?.trim() ?? "" : "";
         }
         return "";
     };
@@ -64,20 +64,19 @@ function get_interface_info(page: Document, link: string) {
             const th = elem.querySelector(".th");
             return th?.textContent?.includes(selector);
         });
-        if (find_item_in_table) {
-            const dom = find_item_in_table.querySelector(".td, div.item");
-            if( !dom ) {
-                return [];
-            }
-            switch (selector) {
-                case SELECTORS.ACTORS: return getActorDatas([...dom.querySelectorAll("a")]);
-                case SELECTORS.GENRE : return getGenreDatas([...dom.querySelectorAll("a")]);
-                case SELECTORS.LABEL : return getLabelDatas([...dom.querySelectorAll("a")]);
-                case SELECTORS.SERIES: return getSeriesDatas([...dom.querySelectorAll("a")]);
-                default: return [];
-            }
+        if (!find_item_in_table) {
+            return [];
         }
-        return [];
+
+        const links = find_item_in_table.querySelectorAll(".td a, div.item a");
+
+        switch (selector) {
+            case SELECTORS.ACTORS: return getActorDatas([...links]);
+            case SELECTORS.GENRE : return getGenreDatas([...links]);
+            case SELECTORS.LABEL : return getLabelDatas([...links]);
+            case SELECTORS.SERIES: return getSeriesDatas([...links]);
+            default: return [];
+        }
     };
     const additional_replace = (input_text: string, selector: string): string => {
         switch (selector) {
