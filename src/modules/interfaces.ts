@@ -25,6 +25,9 @@ export interface PaginationInterface {
     end: number,
 }
 
+/**
+ * As a response what should you be?
+ */
 export interface RequestResponse<T> {
     /**
      * If the text is not "success", you really need to read it.
@@ -47,6 +50,7 @@ export interface RequestResponse<T> {
      */
     pagination?: PaginationInterface
 }
+
 /**
  * Alias of `RequestResponse`
  */

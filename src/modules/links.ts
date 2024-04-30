@@ -1,4 +1,8 @@
 import { GetLinkId } from "./utils.js";
+
+/**
+ * The basic link
+ */
 export interface BasicLinkInterface {
     name: string
     link: string

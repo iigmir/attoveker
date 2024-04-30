@@ -3,11 +3,13 @@ import { DomList } from "../modules/basic.js";
 import { GetLinkId, GetPaginationByDom, GetPageParam } from "../modules/utils.js";
 import { RequestResponse } from "../modules/interfaces.js";
 import { ActorInterface } from "../modules/links.js";
+import { ImageCards, ImageCardsInterface } from "../modules/lists.js";
 import type { Request, Response } from "express";
 
 interface ActressesDetailInterface {
     actor: ActorInterface
     profile: string[][]
+    works: ImageCardsInterface[]
 }
 class ActressesDetail {
     document: Document;
@@ -62,6 +64,7 @@ class ActressesDetail {
         return {
             actor: this.get_actor(),
             profile: this.get_profile(),
+            works: (new ImageCards(this.document)).api(),
         };
     }
 }
