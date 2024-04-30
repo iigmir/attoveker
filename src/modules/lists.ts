@@ -35,13 +35,18 @@ export class ImageCards extends DomList {
             const link_dom: HTMLAnchorElement | null = its.querySelector("a");
             const image_dom: HTMLImageElement | null = its.querySelector("img.c-main-bg");
             const title_dom: HTMLParagraphElement | null = its.querySelector("p.text");
+            const get_video_id = (link_dom: HTMLAnchorElement | null) : string => {
+                if( link_dom ) {
+                    this.get_id(/\/works\/detail\/([A-Z0-9]+)(\?|)/g, link_dom.href)
+                        .replace(/\/works\/detail\//g, "");
+                }
+                return "";
+            }
             return {
                 image: image_dom ? image_dom.dataset.src : "",
                 title: title_dom ? title_dom.textContent : "",
                 link: link_dom ? link_dom.href : "",
-                id: this
-                    .get_id( /\/works\/detail\/([A-Z0-9]+)(\?|)/g, link_dom ? link_dom.href : "")
-                    .replace(/\/works\/detail\//g, ""),
+                id: get_video_id(link_dom),
                 actor: this.get_actor(its),
             };
         });

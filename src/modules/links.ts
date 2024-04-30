@@ -64,8 +64,6 @@ export function GetData(a: Element | HTMLAnchorElement, type: GetDataType): Basi
     };
     // Vars
     const dom = get_dom(a, get_selector(type));
-    const detection_regex = get_detection_regex(type);
-    const replacing_regex = get_replacing_regex(type);
 
     // Final actions...
     if( dom == null ) {
@@ -78,7 +76,7 @@ export function GetData(a: Element | HTMLAnchorElement, type: GetDataType): Basi
     return {
         name: dom.textContent ?? "",
         link: dom.href,
-        id: get_text( detection_regex, dom.href ).replace( replacing_regex, "" ),
+        id: get_text( get_detection_regex(type), dom.href ).replace( get_replacing_regex(type), "" ),
     };
 }
 
