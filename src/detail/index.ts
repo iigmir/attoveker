@@ -1,20 +1,27 @@
 import { get_webpage } from "../api.js";
 import type { Request, Response } from "express";
 import type { VideoDetailInterface } from "./interfaces.js";
-import { ActorInterface, getActorDatas, getGenreDatas, BasicLinkInterface } from "../modules/actor.js";
+import { ActorInterface, getActorDatas, getGeneralDatas, BasicLinkInterface } from "../modules/actor.js";
 
-function get_interface_info(page: Document, result_data: VideoDetailInterface) {
+/**
+ * Get info
+ * @param page 
+ * @param link 
+ * @returns 
+ */
+function get_interface_info(page: Document, link: string) {
     const SELECTORS = {
         TITLE: ".p-workPage__title",
         DESCRIPTION: ".p-workPage__text",
-        TIME: "収録時間",
-        SERIES: "シリーズ",
-        ID: "品番",
-        PRICE: "価格",
-        RELEASE: "発売日",
         ACTORS: "女優",
-        DIRECTOR: "監督",
+        RELEASE: "発売日",
+        SERIES: "シリーズ",
+        LABEL: "レーベル",
         GENRE: "ジャンル",
+        DIRECTOR: "監督",
+        ID: "品番",
+        TIME: "収録時間",
+        PRICE: "価格",
     };
     const get_dom_text = (input: Document, selector: string): string => {
         const dom = input.querySelector(selector);
@@ -42,7 +49,7 @@ function get_interface_info(page: Document, result_data: VideoDetailInterface) {
         });
         if (find_item_in_table) {
             const d = find_item_in_table.querySelector(".td");
-            return d ? d.textContent?.replace("DVD", "").replace("---", "").trim() ?? "" : "";
+            return d ? d.textContent?.trim() ?? "" : "";
         }
         return "";
     };
@@ -55,29 +62,43 @@ function get_interface_info(page: Document, result_data: VideoDetailInterface) {
             const dom = find_item_in_table.querySelector(".td");
             switch (selector) {
                 case SELECTORS.ACTORS: return dom ? getActorDatas([...dom.querySelectorAll("a")]) : [];
-                case SELECTORS.GENRE : return dom ? getGenreDatas([...dom.querySelectorAll("a")]) : [];
+                case SELECTORS.GENRE : return dom ? getGeneralDatas([...dom.querySelectorAll("a")]) : [];
+                case SELECTORS.SERIES: return dom ? getGeneralDatas([...dom.querySelectorAll("a")]) : [];
                 default: return [];
             }
         }
         return [];
+    };
+    const additional_replace = (input_text: string, selector: string): string => {
+        switch (selector) {
+            case SELECTORS.ID: return input_text.replace("DVD", "");
+            case SELECTORS.TIME: return input_text.replace(/\D/g, "");
+            case SELECTORS.PRICE: return input_text.replace(/\D/g, "");
+            case SELECTORS.DIRECTOR: return input_text.replace("---", "");
+            // Remain as it is
+            default: return input_text;
+        }
     };
 
     const video_datas = [...page.querySelectorAll(".p-workPage__table .item")];
 
     // Return...
     return {
-        link: result_data.result.link ?? "",
+        // Metadata
+        link: link,
         title: get_dom_text(page, SELECTORS.TITLE),
         description: get_dom_text(page, SELECTORS.DESCRIPTION),
         preview: get_video(page),
-        time: get_table_item(video_datas, SELECTORS.TIME),
-        series: get_table_item(video_datas, SELECTORS.SERIES),
-        id: get_table_item(video_datas, SELECTORS.ID),
-        price: get_table_item(video_datas, SELECTORS.PRICE),
-        release: get_table_item(video_datas, SELECTORS.RELEASE),
-        director: get_table_item(video_datas, SELECTORS.DIRECTOR),
+        // Infos
         actors: get_links_data(video_datas, SELECTORS.ACTORS),
+        release: additional_replace(get_table_item(video_datas, SELECTORS.RELEASE), SELECTORS.RELEASE),
+        series: get_links_data(video_datas, SELECTORS.SERIES),
+        label: get_links_data(video_datas, SELECTORS.LABEL),
         genre: get_links_data(video_datas, SELECTORS.GENRE),
+        director: additional_replace(get_table_item(video_datas, SELECTORS.DIRECTOR), SELECTORS.DIRECTOR),
+        id: additional_replace(get_table_item(video_datas, SELECTORS.ID), SELECTORS.ID),
+        time: additional_replace(get_table_item(video_datas, SELECTORS.TIME), SELECTORS.TIME),
+        price: additional_replace(get_table_item(video_datas, SELECTORS.PRICE), SELECTORS.PRICE),
     };
 }
 
@@ -94,11 +115,12 @@ export const main = async (req: Request, res: Response) => {
             description: "",
             price: "",
             preview: "",
-            series: "",
             release: "",
             director: "",
+            series: [],
             actors: [],
             genre: [],
+            label: [],
         },
     };
 
@@ -111,7 +133,7 @@ export const main = async (req: Request, res: Response) => {
     } else {
         // Otherwise, retrive info
         result_data.message = "success";
-        result_data.result = get_interface_info(page, result_data);
+        result_data.result = get_interface_info(page, result_data.result.link);
     }
     
     res.json(result_data);

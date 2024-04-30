@@ -51,7 +51,7 @@ export function getActorData(a: Element | HTMLAnchorElement): ActorInterface {
     };
 }
 
-export function getGenreData(a: Element | HTMLAnchorElement): BasicLinkInterface {
+export function getGeneralData(a: Element | HTMLAnchorElement): BasicLinkInterface {
     const get_dom = (a: Element | HTMLAnchorElement): HTMLAnchorElement | null => {
         if( a.hasAttribute("href") ) {
             return a as HTMLAnchorElement;
@@ -85,8 +85,8 @@ export function getGenreData(a: Element | HTMLAnchorElement): BasicLinkInterface
         id: id,
     };
 }
-export function getGenreDatas(ary: Element[]): BasicLinkInterface[] {
-    return ary.map( getGenreData );
+export function getGeneralDatas(ary: Element[]): BasicLinkInterface[] {
+    return ary.map( getGeneralData );
 }
 
 /**

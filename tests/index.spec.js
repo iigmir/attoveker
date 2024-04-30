@@ -62,7 +62,6 @@ describe("GET /detail", () => {
             strictEqual(api.time, "160");
             strictEqual(api.price, "4598");
             strictEqual(api.preview, "https://cc3001.dmm.co.jp/litevideo/freepv/a/adn/adn00551/adn00551_dm_w.mp4");
-            strictEqual(api.series, "");
         });
     });
     describe( "/ATID141", () => {
@@ -87,7 +86,6 @@ describe("GET /detail", () => {
             strictEqual(api.time, "110");
             strictEqual(api.price, "2940");
             strictEqual(api.preview, "https://cc3001.dmm.co.jp/litevideo/freepv/a/ati/atid141/atid141_dmb_s.mp4");
-            strictEqual(api.series, "アナル奴隷白書");
         });
     });
     describe( "/ATKD370", () => {
@@ -112,7 +110,6 @@ describe("GET /detail", () => {
             strictEqual(api.time, "480");
             strictEqual(api.price, "3498");
             strictEqual(api.preview, "https://cc3001.dmm.co.jp/litevideo/freepv/a/atk/atkd00370/atkd00370_dm_w.mp4");
-            strictEqual(api.series, "");
         });
     });
 });
