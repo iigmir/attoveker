@@ -65,9 +65,8 @@ function get_interface_info(page: Document, link: string) {
             return th?.textContent?.includes(selector);
         });
         if (find_item_in_table) {
-            const dom = find_item_in_table.querySelector(".td");
+            const dom = find_item_in_table.querySelector(".td, div.item");
             if( !dom ) {
-                console.log(selector, dom);
                 return [];
             }
             switch (selector) {
