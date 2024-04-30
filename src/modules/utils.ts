@@ -14,3 +14,14 @@ export function GetLinkId(url = "") {
     }
     return id;
 }
+
+
+export function GetPagination(text: string, page: number) {
+    return {
+        page: page,
+        total: 0,
+        items: 0,
+        start: 0,
+        end: 0,
+    };
+}
