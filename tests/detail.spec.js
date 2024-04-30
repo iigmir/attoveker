@@ -46,6 +46,8 @@ describe("GET /detail", () => {
         it("can get video's list datas", () => {
             strictEqual(api.actors.length, 1);
             strictEqual(api.genre.length, 4);
+            strictEqual(api.series.length, 0);
+            strictEqual(api.label.length, 1);
         });
     });
     describe( "/ATID141", () => {
@@ -72,6 +74,8 @@ describe("GET /detail", () => {
         it("can get video's list datas", () => {
             strictEqual(api.actors.length, 1);
             strictEqual(api.genre.length, 1);
+            strictEqual(api.series.length, 1);
+            strictEqual(api.label.length, 1);
         });
     });
     describe( "/ATKD370", () => {
@@ -98,6 +102,8 @@ describe("GET /detail", () => {
         it("can get video's list datas", () => {
             strictEqual(api.actors.length, 20);
             strictEqual(api.genre.length, 3);
+            strictEqual(api.series.length, 0);
+            strictEqual(api.label.length, 1);
         });
     });
 });
