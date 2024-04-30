@@ -43,11 +43,14 @@ const get_replacing_regex = (type: GetDataType) => {
 };
 
 export function GetData(a: Element | HTMLAnchorElement, type: GetDataType): BasicLinkInterface {
-    const get_dom = (a: Element | HTMLAnchorElement): HTMLAnchorElement | null => {
+    const selector = get_selector(type);
+    const detection_regex = get_detection_regex(type);
+    const replacing_regex = get_replacing_regex(type);
+    const get_dom = (a: Element | HTMLAnchorElement, selector: string): HTMLAnchorElement | null => {
         if( a.hasAttribute("href") ) {
             return a as HTMLAnchorElement;
         }
-        return a.querySelector( get_selector(type) );
+        return a.querySelector( selector );
     };
     const get_text = (regex = /whatever/g, input = "") => {
         // Use the regex to extract the ID from the text
@@ -61,9 +64,9 @@ export function GetData(a: Element | HTMLAnchorElement, type: GetDataType): Basi
             return "";
         }
     };
-    const dom = get_dom(a);
+    const dom = get_dom(a, selector);
     const input_text = dom?.href ?? "";
-    const id = get_text( get_detection_regex(type), input_text).replace( get_replacing_regex(type), "");
+    const id = get_text( detection_regex, input_text).replace( replacing_regex, "");
 
     // Final actions...
     if( dom == null ) {
