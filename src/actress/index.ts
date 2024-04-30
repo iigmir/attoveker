@@ -1,10 +1,36 @@
+// Callbacks and classes
 import { get_actress } from "../api.js";
 import { DomList } from "../modules/basic.js";
 import { GetLinkId, GetPaginationByDom, GetPageParam } from "../modules/utils.js";
-import { RequestResponse } from "../modules/interfaces.js";
-import { ActorInterface } from "../modules/links.js";
-import { ImageCards, ImageCardsInterface } from "../modules/lists.js";
+// Interfaces
+import type { RequestResponse } from "../modules/interfaces.js";
+import type { ActorInterface } from "../modules/links.js";
+import type { ImageCardsInterface } from "../modules/lists.js";
 import type { Request, Response } from "express";
+
+class ActressesDetailWorks extends DomList {
+    dom_name = "a.item"
+    constructor(input: Document) {
+        super();
+        if( input ) {
+            this.set_list_by_dom(input);
+        }
+    }
+    api(): ImageCardsInterface[] {
+        const mapping_callback = (its: Element): ImageCardsInterface => {
+            const link_dom: HTMLAnchorElement | null = its as HTMLAnchorElement;
+            const image_dom: HTMLImageElement | null = its.querySelector("img.c-main-bg");
+            const title_dom: HTMLParagraphElement | null = its.querySelector("p.text");
+            return {
+                image: image_dom ? String(image_dom.dataset.src) : "",
+                title: title_dom ? title_dom.textContent ?? "" : "",
+                link: link_dom ? link_dom.href : "",
+                id: GetLinkId(link_dom ? link_dom.href : ""),
+            };
+        };
+        return this.list.map( mapping_callback );
+    }
+}
 
 interface ActressesDetailInterface {
     actor: ActorInterface
@@ -64,7 +90,7 @@ class ActressesDetail {
         return {
             actor: this.get_actor(),
             profile: this.get_profile(),
-            works: (new ImageCards(this.document)).api(),
+            works: (new ActressesDetailWorks(this.document)).api(),
         };
     }
 }

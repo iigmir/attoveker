@@ -7,7 +7,7 @@ export interface ImageCardsInterface {
     title: string
     link: string
     id: string
-    actor: ActorInterface
+    actor?: ActorInterface
 }
 /**
  * For any DOMs under `<div class="item"> <div class="c-card">`
