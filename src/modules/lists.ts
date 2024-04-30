@@ -1,5 +1,6 @@
 import { DomList } from "./basic.js";
-import { ActorInterface, getActorData } from "./links.js";
+import { getActorData } from "./links.js";
+import { GetLinkId } from "./utils.js";
 
 /**
  * For any DOMs under `<div class="item"> <div class="c-card">`
@@ -12,42 +13,17 @@ export class ImageCards extends DomList {
             this.set_list_by_dom(input);
         }
     }
-    get_id( regex = /whatever/g, input = "" ) {
-        const get_text = (regex = /whatever/g, input = "") => {
-            // Use the regex to extract the ID from the text
-            const match = input.match(regex);
-            // Check if a match is found
-            if (match) {
-                // Return the captured the ID
-                return match[0] ? match[0] : "";
-            } else {
-                // Return null if no match is found
-                return "";
-            }
-        };
-        return get_text(regex, input);
-    }
-    get_actor(its: Element): ActorInterface {
-        return getActorData(its);
-    }
     api() {
         return this.list.map( (its) => {
             const link_dom: HTMLAnchorElement | null = its.querySelector("a");
             const image_dom: HTMLImageElement | null = its.querySelector("img.c-main-bg");
             const title_dom: HTMLParagraphElement | null = its.querySelector("p.text");
-            const get_video_id = (link_dom: HTMLAnchorElement | null) : string => {
-                if( link_dom ) {
-                    this.get_id(/\/works\/detail\/([A-Z0-9]+)(\?|)/g, link_dom.href)
-                        .replace(/\/works\/detail\//g, "");
-                }
-                return "";
-            }
             return {
                 image: image_dom ? image_dom.dataset.src : "",
                 title: title_dom ? title_dom.textContent : "",
                 link: link_dom ? link_dom.href : "",
-                id: get_video_id(link_dom),
-                actor: this.get_actor(its),
+                id: GetLinkId(link_dom ? link_dom.href : ""),
+                actor: getActorData(its),
             };
         });
     }

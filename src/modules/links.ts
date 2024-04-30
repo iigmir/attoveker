@@ -1,3 +1,4 @@
+import { GetLinkId } from "./utils.js";
 export interface BasicLinkInterface {
     name: string
     link: string
@@ -23,24 +24,6 @@ const get_selector = (type: GetDataType) => {
         default: return "";
     }
 };
-const get_detection_regex = (type: GetDataType) => {
-    switch (type) {
-        case GetDataType.Actor: return /\/actress\/detail\/([0-9]+)(\?|)/g;
-        case GetDataType.Genre: return /\/works\/list\/genre\/([0-9]+)(\?|)/g;
-        case GetDataType.Label: return /\/works\/list\/label\/([0-9]+)(\?|)/g;
-        case GetDataType.Series: return /\/works\/list\/series\/([0-9]+)(\?|)/g;
-        default: return /\w/g;
-    }
-};
-const get_replacing_regex = (type: GetDataType) => {
-    switch (type) {
-        case GetDataType.Actor: return /\/actress\/detail\//g;
-        case GetDataType.Genre: return /\/works\/list\/genre\//g;
-        case GetDataType.Label: return /\/works\/list\/label\//g;
-        case GetDataType.Series: return /\/works\/list\/series\//g;
-        default: return /\w/g;
-    }
-};
 
 export function GetData(a: Element | HTMLAnchorElement, type: GetDataType): BasicLinkInterface {
     // Callbacks
@@ -49,18 +32,6 @@ export function GetData(a: Element | HTMLAnchorElement, type: GetDataType): Basi
             return a as HTMLAnchorElement;
         }
         return a.querySelector( selector );
-    };
-    const get_text = (regex = /whatever/g, input = "") => {
-        // Use the regex to extract the ID from the text
-        const match = input.match(regex);
-        // Check if a match is found
-        if (match) {
-            // Return the captured the ID
-            return match[0] ? match[0] : "";
-        } else {
-            // Return null if no match is found
-            return "";
-        }
     };
     // Vars
     const dom = get_dom(a, get_selector(type));
@@ -76,7 +47,7 @@ export function GetData(a: Element | HTMLAnchorElement, type: GetDataType): Basi
     return {
         name: dom.textContent ?? "",
         link: dom.href,
-        id: get_text( get_detection_regex(type), dom.href ).replace( get_replacing_regex(type), "" ),
+        id: GetLinkId( dom.href ),
     };
 }
 
