@@ -1,4 +1,4 @@
-import { get_webpage } from "../api.js";
+import { get_actress } from "../api.js";
 import { DomList } from "../modules/basic.js";
 import { ActorInterface } from "../modules/links.js";
 import { GetLinkId } from "../modules/utils.js";
@@ -62,7 +62,7 @@ class ActressesDetail {
 }
 
 export const detail = async (req: Request, res: Response) => {
-    const page = await get_webpage("https://attackers.net/actress");
+    const page = await get_actress(`https://attackers.net/actress/detail/${req.params.id}`);
     res.json({
         message: "success",
         result: (new ActressesDetail(page)).api(),
@@ -136,7 +136,7 @@ class MainActresses extends DomList {
 }
 
 export const main = async (req: Request, res: Response) => {
-    const page = await get_webpage("https://attackers.net/actress");
+    const page = await get_actress("");
     res.json({
         message: "success",
         result: (new MainActresses(page)).api(),

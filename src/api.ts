@@ -27,3 +27,17 @@ export const get_label = async (id = "", page = "1") => {
     const api = id ? `${API_HOST}/works/list/label/${id}?${params.toString()}` : `${API_HOST}/works/label`;
     return get_webpage(api);
 };
+
+export const get_actress_by_kana = async (id = "", page = "1") => {
+    const list = ["a", "ka", "sa", "ta", "na", "ha", "ma", "ya", "ra", "wa"];
+    const params = new URLSearchParams({ page });
+    const api = id ? `${API_HOST}/actress/${id}?${params.toString()}` : `${API_HOST}/actress`;
+    return get_webpage(api);
+};
+export const get_actress = async (id = "", page = "1") => {
+    // https://attackers.net/actress/detail/356451
+    // https://attackers.net/actress
+    const params = new URLSearchParams({ page });
+    const api = id ? `${API_HOST}/actress/detail/${id}?${params.toString()}` : `${API_HOST}/actress`;
+    return get_webpage(api);
+};
