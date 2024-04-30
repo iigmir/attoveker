@@ -25,4 +25,8 @@ describe("GetLinkId", () => {
         strictEqual( GetLinkId("https://attackers.net/actress/detail/354850?utm_from=123456"), "354850");
         strictEqual( GetLinkId("https://attackers.net/works/list/date/2024-05-07?reply=no"), "2024-05-07");
     });
+    it("can return an empty string for invalid detail", () => {
+        strictEqual( GetLinkId("https://attackers.net/works/detail/#"), "");
+        strictEqual( GetLinkId("https://attackers.net/actress#"), "");
+    });
 });
