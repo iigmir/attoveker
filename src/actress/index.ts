@@ -25,11 +25,20 @@ class MainActresses extends DomList {
             if( matched_link ) {
                 const no_detail_given = matched_link.href.includes("/actress#") || matched_link.href.includes("/works/detail/#");
                 if( no_detail_given ) {
-                    return "";
+                    return {
+                        link: "",
+                        id: "",
+                    };
                 }
-                return matched_link.href;
+                return {
+                    link: matched_link.href,
+                    id: GetLinkId(matched_link.href),
+                };
             }
-            return "";
+            return {
+                link: "",
+                id: "",
+            };
         };
         const links = [...elem.querySelectorAll(".parts a")] as HTMLAnchorElement[];
         return {
