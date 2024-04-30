@@ -18,7 +18,7 @@ describe("GET /actress", () => {
         });
         it("can get newest/puckup actresses", () => {
             strictEqual(Array.isArray(api), true);
-            strictEqual(typeof(api[0].name), "string");
+            strictEqual(typeof(api[0].actor.name), "string");
         });
     });
 });

@@ -26,7 +26,7 @@ class LabelCards extends DomList {
 }
 
 export const by_id = async (req: Request, res: Response) => {
-    const page = await get_webpage(`https://attackers.net/works/label/${req.params.id}`);
+    const page = await get_webpage(`https://attackers.net/works/list/label/${req.params.id}`);
     res.json({
         message: "success",
         params: {
