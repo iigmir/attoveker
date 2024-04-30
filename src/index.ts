@@ -42,6 +42,7 @@ app.get("/series", main_series);
  * Videos from <https://attackers.net/works/genre>
  */
 app.get("/genre", main_genres);
+// app.get("/label/:id", main_genres);
 /**
  * Videos from <https://attackers.net/works/list/release>
  */

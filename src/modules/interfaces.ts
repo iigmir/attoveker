@@ -40,15 +40,15 @@ export interface RequestResponse<T> {
         [key: string]: string;
     }
     /**
-     * Intetface type should decided by the class.
-     */
-    result: T;
-    /**
      * Show info if there's pages use the `page` param. Usually it will be something like this:
      * 
      * `全{TOTAL}{UNIT}中 {START} 〜 {END} {UNIT2}を表示`
      */
     pagination?: PaginationInterface
+    /**
+     * Intetface type should decided by the class.
+     */
+    result: T;
 }
 
 /**

@@ -1,6 +1,9 @@
 import { get_label } from "../api.js";
 import { DomList } from "../modules/basic.js";
-import { ImageCards } from "../modules/lists.js";
+import { ImageCards, ImageCardsInterface } from "../modules/lists.js";
+import { GetPaginationByDom, GetPageParam } from "../modules/utils.js";
+// Interfaces
+import type { RequestResponse } from "../modules/interfaces.js";
 import type { Request, Response } from "express";
 
 class LabelCards extends DomList {
@@ -26,15 +29,23 @@ class LabelCards extends DomList {
 }
 
 export const by_id = async (req: Request, res: Response) => {
-    const page = await get_label(`${req.params.id}`);
-    res.json({
+    const page = await get_label(`${req.params.id}`, GetPageParam(req.query.page));
+    const result: RequestResponse<ImageCardsInterface[]> = {
         message: "success",
         params: {
             ...req.params,
-            ...req.query,
+            /**
+             * `req.query` is a strange API... Don't move it.
+             */
+            ...req.query as any,
         },
+        pagination: GetPaginationByDom(
+            page.body,
+            parseInt(GetPageParam(req.query.page), 10)
+        ),
         result: (new ImageCards(page)).api(),
-    });
+    };
+    res.json(result);
 };
 
 export const main = async (req: Request, res: Response) => {
