@@ -67,7 +67,7 @@ export const main = async (req: Request, res: Response) => {
         });
         if( find_item ) {
             const dom = find_item.querySelector(".td");
-            return dom  ? getActorDatas([...dom.querySelectorAll("a")]) : [];
+            return dom ? getActorDatas([...dom.querySelectorAll("a")]) : [];
         }
         return [];
     };

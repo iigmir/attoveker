@@ -17,8 +17,12 @@ export interface ActorInterface extends BasicLinkInterface {}
  * // returns { name: "松下紗栄子", id: "351897", link: "https://attackers.net/actress/detail/351897" }
  */
 export function getActorData(a: Element): ActorInterface {
-    const selector = 'a[href*="actress/detail"]';
-    const dom: HTMLAnchorElement | null = a.querySelector(selector);
+    function get_dom(a: Element | HTMLAnchorElement): HTMLAnchorElement | null {
+        if( a.hasAttribute("href") ) {
+            return a as HTMLAnchorElement;
+        }
+        return a.querySelector(`a[href*="actress/detail"]`);
+    }
     const get_text = (regex = /whatever/g, input = "") => {
         // Use the regex to extract the ID from the text
         const match = input.match(regex);
@@ -31,10 +35,19 @@ export function getActorData(a: Element): ActorInterface {
             return "";
         }
     };
+    const dom = get_dom(a);
+    const id = get_text(/\/actress\/detail\/([0-9]+)(\?|)/g, dom?.href ?? "").replace(/\/actress\/detail\//g, "");
+    if( dom == null ) {
+        return {
+            name: "",
+            link: "",
+            id: id,
+        };
+    }
     return {
-        name: dom?.textContent ?? "",
-        link: dom?.href ?? "",
-        id: get_text(/\/actress\/detail\/([0-9]+)(\?|)/g, dom?.href ?? "").replace(/\/actress\/detail\//g, ""),
+        name: dom.textContent ?? "",
+        link: dom.href,
+        id: id,
     };
 }
 
