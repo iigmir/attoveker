@@ -1,7 +1,13 @@
 import { get_webpage } from "../api.js";
 import type { Request, Response } from "express";
 import type { VideoDetailInterface } from "./interfaces.js";
-import { ActorInterface, getActorDatas, getGenreDatas, BasicLinkInterface } from "../modules/links.js";
+import {
+    BasicLinkInterface,
+    getActorDatas,
+    getGenreDatas,
+    getLabelDatas,
+    getSeriesDatas,
+} from "../modules/links.js";
 
 /**
  * Get info
@@ -53,7 +59,7 @@ function get_interface_info(page: Document, link: string) {
         }
         return "";
     };
-    const get_links_data = (table: Element[], selector: string): ActorInterface[] | BasicLinkInterface[] => {
+    const get_links_data = (table: Element[], selector: string): BasicLinkInterface[] => {
         const find_item_in_table = table.find((elem) => {
             const th = elem.querySelector(".th");
             return th?.textContent?.includes(selector);
@@ -63,8 +69,8 @@ function get_interface_info(page: Document, link: string) {
             switch (selector) {
                 case SELECTORS.ACTORS: return dom ? getActorDatas([...dom.querySelectorAll("a")]) : [];
                 case SELECTORS.GENRE : return dom ? getGenreDatas([...dom.querySelectorAll("a")]) : [];
-                case SELECTORS.LABEL : return dom ? getGenreDatas([...dom.querySelectorAll("a")]) : [];
-                case SELECTORS.SERIES: return dom ? getGenreDatas([...dom.querySelectorAll("a")]) : [];
+                case SELECTORS.LABEL : return dom ? getLabelDatas([...dom.querySelectorAll("a")]) : [];
+                case SELECTORS.SERIES: return dom ? getSeriesDatas([...dom.querySelectorAll("a")]) : [];
                 default: return [];
             }
         }
