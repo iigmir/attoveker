@@ -38,6 +38,12 @@ export function GetPagination(text: string, page: number): PaginationInterface {
     return result;
 }
 
-export function GetPaginationByDom(elem: Element, page: number) {
-    return GetPagination( String(elem.textContent), page);
+export function GetPaginationByDom(doc: Element, page: number) {
+    const dom = doc.querySelector(".swiper-pagination-02");
+    let text = dom ? String(dom.textContent) : "";
+    return GetPagination( text, page );
+}
+
+export function GetPageParam(page: unknown): string {
+    return typeof page === "string" ? String(page) : "1";
 }

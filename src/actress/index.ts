@@ -1,9 +1,14 @@
 import { get_actress } from "../api.js";
 import { DomList } from "../modules/basic.js";
+import { GetLinkId, GetPaginationByDom, GetPageParam } from "../modules/utils.js";
+import { RequestResponse } from "../modules/interfaces.js";
 import { ActorInterface } from "../modules/links.js";
-import { GetLinkId } from "../modules/utils.js";
 import type { Request, Response } from "express";
 
+interface ActressesDetailInterface {
+    actor: ActorInterface
+    profile: string[][]
+}
 class ActressesDetail {
     document: Document;
     constructor(input: Document) {
@@ -42,7 +47,7 @@ class ActressesDetail {
             avatar: avatar,
         };
     }
-    private get_profile() {
+    private get_profile(): string[][] {
         const table = this.document.querySelectorAll(".p-profile__info .table .item");
         const result: string[][] = [];
         table.forEach(item => {
@@ -53,7 +58,7 @@ class ActressesDetail {
         });
         return result;
     }
-    api() {
+    api(): ActressesDetailInterface {
         return {
             actor: this.get_actor(),
             profile: this.get_profile(),
@@ -62,13 +67,27 @@ class ActressesDetail {
 }
 
 export const detail = async (req: Request, res: Response) => {
-    const page = await get_actress(`https://attackers.net/actress/detail/${req.params.id}`);
-    res.json({
+    const dom = await get_actress(req.params.id, GetPageParam(req.query.page) );
+    const result: RequestResponse<ActressesDetailInterface> = {
         message: "success",
-        result: (new ActressesDetail(page)).api(),
-    });
+        pagination: GetPaginationByDom(dom.body, parseInt(GetPageParam(req.query.page), 10)),
+        result: (new ActressesDetail(dom)).api(),
+    };
+    res.json(result);
 };
 
+interface MainActressesLinkInterface {
+    link: string,
+    id: string,
+}
+interface MainActressesInterface {
+    actor: ActorInterface
+    releases: {
+        reservation: MainActressesLinkInterface,
+        released: MainActressesLinkInterface,
+        newest: MainActressesLinkInterface,
+    }
+}
 class MainActresses extends DomList {
     dom_name = ".item .p-hoverCard"
     constructor(input: Document) {
@@ -76,43 +95,6 @@ class MainActresses extends DomList {
         if( input ) {
             this.set_list_by_dom(input);
         }
-    }
-    /**
-     * Finds and returns the link associated with a specific type of release from a list of links.
-     * @param links links An array of HTMLAnchorElement objects representing links.
-     * @param type_text The text used to identify the type of release.
-     * @returns The URL of the release link, or an empty string if not found or if the link does not provide details.
-     */
-    private get_releases_link(links: HTMLAnchorElement[], type_text: string) {
-        const matched_link = links.find(its => its.textContent?.includes(type_text));
-        if( matched_link ) {
-            const no_detail_given = matched_link.href.includes("/actress#") || matched_link.href.includes("/works/detail/#");
-            if( no_detail_given ) {
-                return {
-                    link: "",
-                    id: "",
-                };
-            }
-            return {
-                link: matched_link.href,
-                id: GetLinkId(matched_link.href),
-            };
-        }
-        return {
-            link: "",
-            id: "",
-        };
-    }
-    releases(elem: Element) {
-        const links = [...elem.querySelectorAll(".parts a")] as HTMLAnchorElement[];
-        return {
-            // 予約
-            reservation: this.get_releases_link(links, "予約"),
-            // 発売
-            released: this.get_releases_link(links, "発売"),
-            // 最新作品を見る
-            newest: this.get_releases_link(links, "最新作品"),
-        };
     }
     private get_actor(its: Element): ActorInterface {
         const link_elem: HTMLAnchorElement | null = its.querySelector("a.img");
@@ -125,11 +107,43 @@ class MainActresses extends DomList {
             avatar: its.querySelector("img")?.dataset.src ?? "",
         };
     }
-
-    api() {
+    /**
+     * Finds and returns the link associated with a specific type of release from a list of links.
+     * @param links links An array of HTMLAnchorElement objects representing links.
+     * @param type_text The text used to identify the type of release.
+     * @returns The URL of the release link, or an empty string if not found or if the link does not provide details.
+     */
+    private get_releases_link(links: HTMLAnchorElement[], type_text: string): MainActressesLinkInterface {
+        const matched_link = links.find(its => its.textContent?.includes(type_text));
+        const result: MainActressesLinkInterface = {
+            link: "",
+            id: "",
+        };
+        if( matched_link ) {
+            const no_detail_given = matched_link.href.includes("/actress#") || matched_link.href.includes("/works/detail/#");
+            if( no_detail_given ) {
+                return result;
+            }
+            result.link = matched_link.href;
+            result.id = GetLinkId(matched_link.href);
+        }
+        return result;
+    }
+    private get_releases(elem: Element) {
+        const links = [...elem.querySelectorAll(".parts a")] as HTMLAnchorElement[];
+        return {
+            // 予約
+            reservation: this.get_releases_link(links, "予約"),
+            // 発売
+            released: this.get_releases_link(links, "発売"),
+            // 最新作品を見る
+            newest: this.get_releases_link(links, "最新作品"),
+        };
+    }
+    api(): MainActressesInterface[] {
         return this.list.map( (its) => {
             const actor: ActorInterface = this.get_actor(its);
-            const releases = this.releases(its);
+            const releases = this.get_releases(its);
             return { actor, releases };
         });
     }
@@ -137,8 +151,10 @@ class MainActresses extends DomList {
 
 export const main = async (req: Request, res: Response) => {
     const page = await get_actress("");
-    res.json({
+    const result: RequestResponse<MainActressesInterface[]> = {
         message: "success",
         result: (new MainActresses(page)).api(),
-    });
+    };
+    res.json(result);
 };
+

@@ -47,3 +47,7 @@ export interface RequestResponse<T> {
      */
     pagination?: PaginationInterface
 }
+/**
+ * Alias of `RequestResponse`
+ */
+export interface RequestResponseInterface<T> extends RequestResponse<T> {};
