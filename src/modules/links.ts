@@ -43,9 +43,7 @@ const get_replacing_regex = (type: GetDataType) => {
 };
 
 export function GetData(a: Element | HTMLAnchorElement, type: GetDataType): BasicLinkInterface {
-    const selector = get_selector(type);
-    const detection_regex = get_detection_regex(type);
-    const replacing_regex = get_replacing_regex(type);
+    // Callbacks
     const get_dom = (a: Element | HTMLAnchorElement, selector: string): HTMLAnchorElement | null => {
         if( a.hasAttribute("href") ) {
             return a as HTMLAnchorElement;
@@ -64,6 +62,13 @@ export function GetData(a: Element | HTMLAnchorElement, type: GetDataType): Basi
             return "";
         }
     };
+
+    // Something get by type    
+    const selector = get_selector(type);
+    const detection_regex = get_detection_regex(type);
+    const replacing_regex = get_replacing_regex(type);
+
+    // vars
     const dom = get_dom(a, selector);
     const input_text = dom?.href ?? "";
     const id = get_text( detection_regex, input_text).replace( replacing_regex, "");

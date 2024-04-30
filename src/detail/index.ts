@@ -66,11 +66,14 @@ function get_interface_info(page: Document, link: string) {
         });
         if (find_item_in_table) {
             const dom = find_item_in_table.querySelector(".td");
+            function get_interfaces(dom: Element | null, callback: Function): BasicLinkInterface[] {
+                return dom ? callback([...dom.querySelectorAll("a")]) : [];
+            }
             switch (selector) {
-                case SELECTORS.ACTORS: return dom ? getActorDatas([...dom.querySelectorAll("a")]) : [];
-                case SELECTORS.GENRE : return dom ? getGenreDatas([...dom.querySelectorAll("a")]) : [];
-                case SELECTORS.LABEL : return dom ? getLabelDatas([...dom.querySelectorAll("a")]) : [];
-                case SELECTORS.SERIES: return dom ? getSeriesDatas([...dom.querySelectorAll("a")]) : [];
+                case SELECTORS.ACTORS: return get_interfaces(dom, getActorDatas);
+                case SELECTORS.GENRE : return get_interfaces(dom, getGenreDatas);
+                case SELECTORS.LABEL : return get_interfaces(dom, getLabelDatas);
+                case SELECTORS.SERIES: return get_interfaces(dom, getSeriesDatas);
                 default: return [];
             }
         }
@@ -145,3 +148,4 @@ export const main = async (req: Request, res: Response) => {
     
     res.json(result_data);
 };
+
