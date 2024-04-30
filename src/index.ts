@@ -6,7 +6,7 @@ import { main as main_releases } from "./release/index.js";
 import { main as get_labels_all, by_id as get_labels_by_id } from "./label/index.js";
 import { main as main_reserves } from "./reserve/index.js";
 import { main as main_detail } from "./detail/index.js";
-import { main as main_actress } from "./actress/index.js";
+import { main as main_actress, detail as get_actress_detail } from "./actress/index.js";
 
 const app = express();
 
@@ -61,6 +61,7 @@ app.get("/reserve", main_reserves);
  * Videos from <https://attackers.net/works/list/actress>
  */
 app.get("/actress", main_actress);
+app.get("/actress/:id", get_actress_detail);
 
 export default app;
 
