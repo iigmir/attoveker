@@ -1,72 +1,83 @@
 import { get_webpage } from "../api.js";
 import type { Request, Response } from "express";
 import type { VideoDetailInterface } from "./interfaces.js";
-import { ActorInterface, getActorDatas, getGenreDatas } from "../modules/actor.js";
+import { ActorInterface, getActorDatas, getGenreDatas, BasicLinkInterface } from "../modules/actor.js";
 
 function get_interface_info(page: Document, result_data: VideoDetailInterface) {
-    const get_dom_text = (page: Document, selector: string) => {
-        const dom = page.querySelector(selector);
+    const SELECTORS = {
+        TITLE: ".p-workPage__title",
+        DESCRIPTION: ".p-workPage__text",
+        TIME: "収録時間",
+        SERIES: "シリーズ",
+        ID: "品番",
+        PRICE: "価格",
+        RELEASE: "発売日",
+        ACTORS: "女優",
+        DIRECTOR: "監督",
+        GENRE: "ジャンル",
+    };
+    const get_dom_text = (input: Document, selector: string): string => {
+        const dom = input.querySelector(selector);
         const result = dom?.textContent?.trim();
         return result ? result : "";
     };
-    const get_video = (page: Document): string => {
-        const dom = page.querySelector("video");
+    /**
+     * Get video URL
+     * @param input DOM
+     * @returns Video URL
+     */
+    const get_video = (input: Document): string => {
+        const dom = input.querySelector("video");
         return dom ? dom.src : "";
     };
     /**
      * get_table_item(table, "監督") // 芳賀栄太郎
      * @param table
-     * @param input
+     * @param selector
      */
-    const get_table_item = (table: Element[], input: string): string => {
-        const find_item = table.find((elem) => {
+    const get_table_item = (table: Element[], selector: string): string => {
+        const find_item_in_table = table.find((elem) => {
             const th = elem.querySelector(".th");
-            return th?.textContent?.includes(input);
+            return th?.textContent?.includes(selector);
         });
-        if (find_item) {
-            const d = find_item.querySelector(".td");
+        if (find_item_in_table) {
+            const d = find_item_in_table.querySelector(".td");
             return d ? d.textContent?.replace("DVD", "").replace("---", "").trim() ?? "" : "";
         }
         return "";
     };
-    const get_actors = (table: Element[], input: string): ActorInterface[] => {
-        const find_item = table.find((elem) => {
+    const get_links_data = (table: Element[], selector: string): ActorInterface[] | BasicLinkInterface[] => {
+        const find_item_in_table = table.find((elem) => {
             const th = elem.querySelector(".th");
-            return th?.textContent?.includes(input);
+            return th?.textContent?.includes(selector);
         });
-        if (find_item) {
-            const dom = find_item.querySelector(".td");
-            return dom ? getActorDatas([...dom.querySelectorAll("a")]) : [];
+        if (find_item_in_table) {
+            const dom = find_item_in_table.querySelector(".td");
+            switch (selector) {
+                case SELECTORS.ACTORS: return dom ? getActorDatas([...dom.querySelectorAll("a")]) : [];
+                case SELECTORS.GENRE : return dom ? getGenreDatas([...dom.querySelectorAll("a")]) : [];
+                default: return [];
+            }
         }
         return [];
     };
-    const get_genres = (table: Element[], input: string): ActorInterface[] => {
-        const find_item = table.find((elem) => {
-            const th = elem.querySelector(".th");
-            return th?.textContent?.includes(input);
-        });
-        if (find_item) {
-            const dom = find_item.querySelector(".td");
-            return dom ? getGenreDatas([...dom.querySelectorAll("a")]) : [];
-        }
-        return [];
-    };
+
     const video_datas = [...page.querySelectorAll(".p-workPage__table .item")];
 
     // Return...
     return {
         link: result_data.result.link ?? "",
-        title: get_dom_text(page, ".p-workPage__title"),
-        description: get_dom_text(page, ".p-workPage__text"),
+        title: get_dom_text(page, SELECTORS.TITLE),
+        description: get_dom_text(page, SELECTORS.DESCRIPTION),
         preview: get_video(page),
-        time: get_table_item(video_datas, "収録時間"),
-        series: get_table_item(video_datas, "シリーズ"),
-        id: get_table_item(video_datas, "品番"),
-        price: get_table_item(video_datas, "価格"),
-        release: get_table_item(video_datas, "発売日"),
-        actors: get_actors(video_datas, "女優"),
-        director: get_table_item(video_datas, "監督"),
-        genre: get_genres(video_datas, "ジャンル"),
+        time: get_table_item(video_datas, SELECTORS.TIME),
+        series: get_table_item(video_datas, SELECTORS.SERIES),
+        id: get_table_item(video_datas, SELECTORS.ID),
+        price: get_table_item(video_datas, SELECTORS.PRICE),
+        release: get_table_item(video_datas, SELECTORS.RELEASE),
+        director: get_table_item(video_datas, SELECTORS.DIRECTOR),
+        actors: get_links_data(video_datas, SELECTORS.ACTORS),
+        genre: get_links_data(video_datas, SELECTORS.GENRE),
     };
 }
 
