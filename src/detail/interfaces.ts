@@ -1,5 +1,5 @@
 import type { ActorInterface, BasicLinkInterface } from "../modules/actor.js";
-import { RequestResponse } from "../interfaces.js";
+import { RequestResponse } from "../modules/interfaces.js";
 
 export interface VideoDetailResultInterface {
     link: string
