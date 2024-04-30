@@ -16,8 +16,8 @@ export interface ActorInterface extends BasicLinkInterface {}
  * getActorData('<a href="https://attackers.net/actress/detail/351897">松下紗栄子</a>')
  * // returns { name: "松下紗栄子", id: "351897", link: "https://attackers.net/actress/detail/351897" }
  */
-export function getActorData(a: Element): ActorInterface {
-    function get_dom(a: Element | HTMLAnchorElement): HTMLAnchorElement | null {
+export function getActorData(a: Element | HTMLAnchorElement): ActorInterface {
+    const get_dom = (a: Element | HTMLAnchorElement): HTMLAnchorElement | null => {
         if( a.hasAttribute("href") ) {
             return a as HTMLAnchorElement;
         }
