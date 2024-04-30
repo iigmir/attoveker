@@ -3,7 +3,7 @@ export interface RequestResponse<T> {
     /**
      * @see <https://stackoverflow.com/a/74312037>
      */
-    params: {
+    params?: {
         [key: string]: string;
     }
     result: T;

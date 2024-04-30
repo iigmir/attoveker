@@ -1,5 +1,6 @@
 import { get_webpage } from "../api.js";
 import { DomList } from "../modules/basic.js";
+import { ImageCards } from "../modules/lists.js";
 import type { Request, Response } from "express";
 
 class LabelCards extends DomList {
@@ -28,7 +29,11 @@ export const by_id = async (req: Request, res: Response) => {
     const page = await get_webpage(`https://attackers.net/works/label/${req.params.id}`);
     res.json({
         message: "success",
-        result: (new LabelCards(page)).api(),
+        params: {
+            ...req.params,
+            ...req.query,
+        },
+        result: (new ImageCards(page)).api(),
     });
 };
 
