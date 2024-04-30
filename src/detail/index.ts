@@ -59,17 +59,22 @@ function get_interface_info(page: Document, link: string) {
         }
         return "";
     };
+    /**
+     * get_links_data(`<div><a>1</a><a>2</a><a>3</a></div>`, `SELECTORS.WHATEVER`)
+     * // returns `[{1},{2},{3}]`
+     * @param table 
+     * @param selector 
+     * @returns 
+     */
     const get_links_data = (table: Element[], selector: string): BasicLinkInterface[] => {
-        const find_item_in_table = table.find((elem) => {
+        const selected_item = table.find((elem) => {
             const th = elem.querySelector(".th");
             return th?.textContent?.includes(selector);
         });
-        if (!find_item_in_table) {
+        if (!selected_item) {
             return [];
         }
-
-        const links = find_item_in_table.querySelectorAll(".td a, div.item a");
-
+        const links = selected_item.querySelectorAll("a");
         switch (selector) {
             case SELECTORS.ACTORS: return getActorDatas([...links]);
             case SELECTORS.GENRE : return getGenreDatas([...links]);
