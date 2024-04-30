@@ -9,7 +9,12 @@ import type { ImageCardsInterface } from "../modules/lists.js";
 import type { Request, Response } from "express";
 
 class ActressesDetailWorks extends DomList {
-    dom_name = "a.item"
+    dom_name = ".swiper-wrapper a.item"
+    actor: ActorInterface = {
+        name: "",
+        id: "",
+        link: ""
+    }
     constructor(input: Document) {
         super();
         if( input ) {
@@ -26,6 +31,7 @@ class ActressesDetailWorks extends DomList {
                 title: title_dom ? title_dom.textContent ?? "" : "",
                 link: link_dom ? link_dom.href : "",
                 id: GetLinkId(link_dom ? link_dom.href : ""),
+                actor: this.actor
             };
         };
         return this.list.map( mapping_callback );
@@ -87,10 +93,12 @@ class ActressesDetail {
         return result;
     }
     api(): ActressesDetailInterface {
+        const works = new ActressesDetailWorks(this.document);
+        works.actor = this.get_actor();
         return {
             actor: this.get_actor(),
             profile: this.get_profile(),
-            works: (new ActressesDetailWorks(this.document)).api(),
+            works: (works).api(),
         };
     }
 }
