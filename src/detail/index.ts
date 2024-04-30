@@ -1,7 +1,7 @@
 import { get_webpage } from "../api.js";
 import type { Request, Response } from "express";
 import type { VideoDetailInterface } from "./interfaces.js";
-import { ActorInterface, getActorDatas, getGeneralDatas, BasicLinkInterface } from "../modules/actor.js";
+import { ActorInterface, getActorDatas, getGenreDatas, BasicLinkInterface } from "../modules/actor.js";
 
 /**
  * Get info
@@ -62,8 +62,9 @@ function get_interface_info(page: Document, link: string) {
             const dom = find_item_in_table.querySelector(".td");
             switch (selector) {
                 case SELECTORS.ACTORS: return dom ? getActorDatas([...dom.querySelectorAll("a")]) : [];
-                case SELECTORS.GENRE : return dom ? getGeneralDatas([...dom.querySelectorAll("a")]) : [];
-                case SELECTORS.SERIES: return dom ? getGeneralDatas([...dom.querySelectorAll("a")]) : [];
+                case SELECTORS.GENRE : return dom ? getGenreDatas([...dom.querySelectorAll("a")]) : [];
+                case SELECTORS.LABEL : return dom ? getGenreDatas([...dom.querySelectorAll("a")]) : [];
+                case SELECTORS.SERIES: return dom ? getGenreDatas([...dom.querySelectorAll("a")]) : [];
                 default: return [];
             }
         }
