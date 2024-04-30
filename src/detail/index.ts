@@ -1,7 +1,7 @@
 import { get_webpage } from "../api.js";
 import type { Request, Response } from "express";
 import type { VideoDetailInterface } from "./interfaces.js";
-import { ActorInterface, getActorDatas, getGenreDatas, BasicLinkInterface } from "../modules/actor.js";
+import { ActorInterface, getActorDatas, getGenreDatas, BasicLinkInterface } from "../modules/links.js";
 
 /**
  * Get info
