@@ -1,5 +1,6 @@
 import { get_webpage } from "../api.js";
-import { DomList, ImageCards } from "../modules.js";
+import { ImageCards } from "../modules.js";
+import { DomList } from "../modules/basic.js";
 import type { Request, Response } from "express";
 
 export class SlideCards extends DomList {

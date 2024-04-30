@@ -3,7 +3,7 @@ import { main as main_api } from "./top/index.js";
 import { main as main_series } from "./series/index.js";
 import { main as main_genres } from "./genre/index.js";
 import { main as main_releases } from "./release/index.js";
-import { main as main_labels } from "./label/index.js";
+import { main as get_labels_all, by_id as get_labels_by_id } from "./label/index.js";
 import { main as main_reserves } from "./reserve/index.js";
 import { main as main_detail } from "./detail/index.js";
 
@@ -48,7 +48,9 @@ app.get("/release", main_releases);
 /**
  * Videos from <https://attackers.net/works/label>
  */
-app.get("/label", main_labels);
+app.get("/label", get_labels_all);
+app.get("/label/:id", get_labels_by_id);
+
 /**
  * Videos from <https://attackers.net/works/list/reserve>
  */

@@ -1,5 +1,5 @@
-import { DomList } from "./modules/basic.js";
-import { ActorInterface, getActorData } from "./modules/actor.js";
+import { DomList } from "./basic.js";
+import { ActorInterface, getActorData } from "./actor.js";
 
 /**
  * For any DOMs under `<div class="item"> <div class="c-card">`
