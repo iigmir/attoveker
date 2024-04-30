@@ -34,10 +34,10 @@ describe("GetLinkId", () => {
 // pagination
 describe("Pagination", () => {
     const cases = [
-        ["全167人中 13 〜 24 人を表示", 2, { page: 2, total: 167, items: 12, start: 13, end: 24, }],
         ["全2作品中 1 〜 2 タイトルを表示", 1, { page: 1, total: 2, items: 2, start: 1, end: 2, }],
         ["全16作品中 1 〜 12 タイトルを表示", 1, { page: 1, total: 16, items: 12, start: 1, end: 12, }],
         ["全16作品中 13 〜 16 タイトルを表示", 2, { page: 2, total: 16, items: 4, start: 13, end: 16, }],
+        ["全167人中 13 〜 24 人を表示", 2, { page: 2, total: 167, items: 12, start: 13, end: 24, }],
         ["全69人中 49 〜 60 人を表示", 5, { page: 5, total: 69, items: 12, start: 49, end: 60, }],
         ["全240人中 13 〜 24 人を表示", 2, { page: 2, total: 240, items: 12, start: 13, end: 24, }],
         ["全167人中 1 〜 12 人を表示", 1, { page: 1, total: 167, items: 12, start: 1, end: 12, }],

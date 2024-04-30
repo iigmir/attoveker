@@ -15,13 +15,31 @@ export function GetLinkId(url = "") {
     return id;
 }
 
+interface PaginationInterface {
+    page: number,
+    total: number,
+    items: number,
+    start: number,
+    end: number,
+}
 
-export function GetPagination(text: string, page: number) {
-    return {
+export function GetPagination(text: string, page: number): PaginationInterface {
+    const regex = /全(\d+)(人|作品)中 (\d+) 〜 (\d+) (人|タイトル)を表示/;
+    const match = text.match(regex);
+    const result = {
         page: page,
         total: 0,
         items: 0,
         start: 0,
         end: 0,
     };
+    if( !match ) {
+        return result;
+    }
+    const [source_text, total, unit, start, end, unit2] = match;
+    result.total = parseInt(total, 10);
+    result.start = parseInt(start, 10);
+    result.end = parseInt(end, 10);
+    result.items = (result.end - result.start) + 1;
+    return result;
 }
