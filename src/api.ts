@@ -28,15 +28,39 @@ export const get_label = async (id = "", page = "1") => {
     return get_webpage(api);
 };
 
+/**
+ * `id` accepts either:
+ * "a", "ka", "sa", "ta", "na", "ha", "ma", "ya", "ra", "wa"
+ * 
+ * Which means:
+ * "あ", "か", "さ", "た", "な", "は", "ま", "や", "ら", "わ"
+ * 
+ * @see https://learnjapanesewithyuko.com/characters/hiragana-chart
+ * @param id 
+ * @param page 
+ * @returns 
+ */
 export const get_actress_by_kana = async (id = "", page = "1") => {
-    const list = ["a", "ka", "sa", "ta", "na", "ha", "ma", "ya", "ra", "wa"];
-    const params = new URLSearchParams({ page });
-    const api = id ? `${API_HOST}/actress/${id}?${params.toString()}` : `${API_HOST}/actress`;
+    function get_api(id = "", page = "1") {
+        const params = new URLSearchParams({ page });
+        const kanas = ["a", "ka", "sa", "ta", "na", "ha", "ma", "ya", "ra", "wa"];
+        if( kanas.includes(id) ) {
+            return `${API_HOST}/actress/${id}?${params.toString()}`
+        }
+        return `${API_HOST}/actress`;
+    }
+    const api = get_api(id, page);
     return get_webpage(api);
 };
+
+/**
+ * @see https://attackers.net/actress/detail/356451
+ * @see https://attackers.net/actress
+ * @param id 
+ * @param page 
+ * @returns 
+ */
 export const get_actress = async (id = "", page = "1") => {
-    // https://attackers.net/actress/detail/356451
-    // https://attackers.net/actress
     const params = new URLSearchParams({ page });
     const api = id ? `${API_HOST}/actress/detail/${id}?${params.toString()}` : `${API_HOST}/actress`;
     return get_webpage(api);
