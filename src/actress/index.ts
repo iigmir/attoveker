@@ -61,10 +61,10 @@ class MainActresses extends DomList {
         const link_elem: HTMLAnchorElement | null = its.querySelector("a.img");
         const link = link_elem?.href ?? "";
         return {
+            id: GetLinkId(link),
             link: link,
             name: its.querySelector("p.name")?.textContent ?? "",
             en_name: its.querySelector("p.en")?.textContent ?? "",
-            id: GetLinkId(link),
             avatar: its.querySelector("img")?.dataset.src ?? "",
         };
     }
