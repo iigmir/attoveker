@@ -62,29 +62,23 @@ export function GetData(a: Element | HTMLAnchorElement, type: GetDataType): Basi
             return "";
         }
     };
-
-    // Something get by type    
-    const selector = get_selector(type);
+    // Vars
+    const dom = get_dom(a, get_selector(type));
     const detection_regex = get_detection_regex(type);
     const replacing_regex = get_replacing_regex(type);
-
-    // vars
-    const dom = get_dom(a, selector);
-    const input_text = dom?.href ?? "";
-    const id = get_text( detection_regex, input_text).replace( replacing_regex, "");
 
     // Final actions...
     if( dom == null ) {
         return {
             name: "",
             link: "",
-            id: id,
+            id: "",
         };
     }
     return {
         name: dom.textContent ?? "",
         link: dom.href,
-        id: id,
+        id: get_text( detection_regex, dom.href ).replace( replacing_regex, "" ),
     };
 }
 
