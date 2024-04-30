@@ -11,6 +11,7 @@ export interface VideoDetailResultInterface {
     preview: string
     series: string
     release: string
+    director: string
     actors: ActorInterface[]
     genre: BasicLinkInterface[]
 }

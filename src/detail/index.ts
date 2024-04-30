@@ -18,6 +18,7 @@ export const main = async (req: Request, res: Response) => {
             preview: "",
             series: "",
             release: "",
+            director: "",
             actors: [],
             genre: [],
         },
@@ -55,7 +56,7 @@ export const main = async (req: Request, res: Response) => {
         });
         if( find_item ) {
             const d = find_item.querySelector(".td");
-            return d ? d.textContent?.replace("DVD", "").trim() ?? "" : "";
+            return d ? d.textContent?.replace("DVD", "").replace("---", "").trim() ?? "" : "";
         }
         return "";
     };
@@ -82,6 +83,7 @@ export const main = async (req: Request, res: Response) => {
         price: get_table_item(video_datas, "価格"),
         release: get_table_item(video_datas, "発売日"),
         actors: get_actors(video_datas, "女優"),
+        director: get_table_item(video_datas, "監督"),
         genre: [],
     };
     res.json(result_data);
